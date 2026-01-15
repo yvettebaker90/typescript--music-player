@@ -8,7 +8,9 @@
     <title>Document</title>
 </head>
 <body>
-    <article class="player-card">
+    <!-- Kod från gårdagens lektion (14/1)
+
+     <article class="player-card">
         <div class="image-wrapper">
             <img 
             id ="cover-img"
@@ -24,6 +26,25 @@
             <button class="control-wrapper">◄◄</button>
             <button class="control-btn play-btn">▶</button> 
             <button class="control-btn">►►</button>
-    </article>
+    </article> -->
+
+
+    <!--Kod från dagens lektion (15/1)-->
+
+    <!--Main-->
+    <main id="song-list-container" class="song-grid"></main>
+
+    <footer id="player-footer" class="player card fixed bottom">
+        <div class="info-wrapper">
+            <h2 id="song-title" class="song-title">Choose a song</h2>
+            <span id="song-artist" class="artist-name"></span>
+        </div>
+
+        <div class="controls-wrapper">
+            <button id="prev-btn" class="control-btn" aria-label="play previous song">◄◄</button>
+            <button id="play-btn" class="control-btn play-btn" aria-label="play or pause">▶</button> 
+            <button id="next-btn" class="control-btn" aria-label="play next song">►►</button>
+        </div>
+    </footer>
 </body>
 </html>

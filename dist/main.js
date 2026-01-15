@@ -1,6 +1,6 @@
 //Se så att koden kopplas till html och syns i konsolen
 // console.log("🎧 Music Player started");
-//Mockdata (data jag själv skapat för att testa koden)
+// MOCKDATA (data jag själv skapat för att testa koden)
 const playlist = [
     {
         id: 1,
@@ -69,15 +69,31 @@ const playlist = [
         }
     }
 ];
+//VARIABLAR för DOM-element
 const songTitleElement = document.getElementById("song-title");
 const songArtistElement = document.getElementById("song-artist");
 const coverImageElement = document.getElementById("cover-img");
 // const playButton = document.getElementById("prev-btn");
 // const pauseButton = document.getElementById("play-pause-btn");
 // const stopButton = document.getElementById("stop-btn");
+//querySelector är mer modern och kan göra mer saker än getElementById då den kollar genom id, classer, taggar osv vilket inte getElementById kan
+const songListContainer = document.querySelector("#song-list-container");
+// LOGIC
+playlist.forEach((song) => {
+    const card = document.createElement("article");
+    card.classList.add("song-card");
+    const title = document.createElement("h3");
+    title.textContent = song.title;
+    const artist = document.createElement("span");
+    artist.textContent = song.artist;
+    card.append(title, artist);
+    if (songListContainer) {
+        songListContainer.append(card);
+    }
+});
 const currentSong = playlist[0];
 if (!currentSong) {
-    console.warn("No songs in playlist");
+    console.warn("No songs in playlist"); //La till detta för jag fick en röd varning annars av VSC om att currentSong kan vara undefined
 }
 else {
     if (songTitleElement) {
