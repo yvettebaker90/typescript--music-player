@@ -3,6 +3,7 @@
 // const song: string = "Bohemian Rhapsody";
 // const artist: string = "Queen";
 // console.log(`Now playing: ${song} by ${artist}`);
+const PLACEHOLDER_COVER = "https://via.placeholder.com/200x200.png?text=No+cover";
 // MOCKDATA (data jag själv skapat för att testa koden)
 const playlist = [
     {
@@ -80,10 +81,10 @@ const coverImageElement = document.getElementById("cover-img");
 const prevBtn = document.getElementById("prev-btn");
 const playBtn = document.getElementById("play-btn");
 const nextBtn = document.getElementById("next-btn");
-// ===== State =====
+// State
 let currentIndex = -1; // ingen vald låt från start
 let status = "stopped";
-// ===== Render song list (createElement + textContent + classList + append) =====
+// Render song list (createElement + textContent + classList + append)
 function renderSongList() {
     if (!songListContainer)
         return;
@@ -92,18 +93,22 @@ function renderSongList() {
         const card = document.createElement("article");
         card.classList.add("song-card");
         card.dataset.index = String(index);
+        const img = document.createElement("img");
+        img.classList.add("song-card__cover");
+        img.src = song.album.coverUrl ?? PLACEHOLDER_COVER;
+        img.alt = song.album.coverUrl ? `${song.title} cover` : "No cover available";
         const title = document.createElement("h3");
         title.classList.add("song-card__title");
         title.textContent = song.title;
         const artist = document.createElement("span");
         artist.classList.add("song-card__artist");
         artist.textContent = song.artist;
-        card.append(title, artist);
+        card.append(img, title, artist);
         // highlight om vald
         if (index === currentIndex) {
             card.classList.add("is-active");
         }
-        // ===== Interaktion (addEventListener) =====
+        // Interaktion (addEventListener)
         card.addEventListener("click", () => {
             setCurrentSong(index);
             setStatus("playing");
@@ -111,8 +116,7 @@ function renderSongList() {
         songListContainer.append(card);
     });
 }
-const PLACEHOLDER_COVER = "https://via.placeholder.com/200x200.png?text=No+cover";
-// ===== Update player UI =====
+// Update player UI 
 function setCurrentSong(index) {
     const song = playlist[index];
     if (!song)
@@ -123,8 +127,8 @@ function setCurrentSong(index) {
     if (songArtistElement)
         songArtistElement.textContent = song.artist;
     if (coverImageElement) {
-        coverImageElement.src = song.album.coverUrl ?? "PLACEHOLDER_COVER";
-        coverImageElement.alt = `${song.title} cover`;
+        coverImageElement.src = song.album.coverUrl ?? "";
+        coverImageElement.alt = song.album.coverUrl ? `${song.title} cover` : "";
     }
     renderSongList(); // uppdatera active state
 }

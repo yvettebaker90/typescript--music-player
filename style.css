@@ -175,7 +175,7 @@ img {
   border-radius: var(--radius-lg);
   padding: var(--space-3);
   cursor: pointer;
-  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;  
 }
 
 .song-card:hover {
@@ -195,6 +195,16 @@ img {
   margin-top: var(--space-1);
   color: var(--clr-text-muted);
   font-size: 0.9rem;
+}
+
+.song-card__cover {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* Footer player (block) */
@@ -254,6 +264,14 @@ img {
 /* EXCEPTIONS (small overrides)*/
 .song-card.is-active {
   border-color: rgba(34, 197, 94, 0.6);
+  background-color: var(--clr-accent-hover);
+  color: var(--clr-accent-text);
+}
+
+.song-card.is-active .song-card__artist{
+  border-color: rgba(34, 197, 94, 0.6);
+  background-color: var(--clr-accent-hover);
+  color: var(--clr-accent-text);
 }
 
 .player-footer .control-btn {

@@ -4,6 +4,9 @@
 // const artist: string = "Queen";
 // console.log(`Now playing: ${song} by ${artist}`);
 
+
+const PLACEHOLDER_COVER = "https://via.placeholder.com/200x200.png?text=No+cover";
+
 //  INTERFACER / TYPER
 interface Song {
     id: number;
@@ -115,6 +118,11 @@ function renderSongList() {
     card.classList.add("song-card");
     card.dataset.index = String(index);
 
+    const img = document.createElement("img");
+    img.classList.add("song-card__cover");
+    img.src = song.album.coverUrl ?? PLACEHOLDER_COVER;
+    img.alt = song.album.coverUrl ? `${song.title} cover` : "No cover available";
+
     const title = document.createElement("h3");
     title.classList.add("song-card__title");
     title.textContent = song.title;
@@ -123,7 +131,7 @@ function renderSongList() {
     artist.classList.add("song-card__artist");
     artist.textContent = song.artist;
 
-    card.append(title, artist);
+    card.append(img, title, artist);
 
     // highlight om vald
     if (index === currentIndex) {
