@@ -1,5 +1,8 @@
 //Se så att koden kopplas till html och syns i konsolen
 // console.log("🎧 Music Player started");
+// const song: string = "Bohemian Rhapsody";
+// const artist: string = "Queen";
+// console.log(`Now playing: ${song} by ${artist}`);
 // MOCKDATA (data jag själv skapat för att testa koden)
 const playlist = [
     {
@@ -10,7 +13,7 @@ const playlist = [
         album: {
             title: "A Night at the Opera",
             year: 1975,
-            coverUrl: "https://example.com/queen.jpg",
+            coverUrl: "https://upload.wikimedia.org/wikipedia/en/9/9f/Bohemian_Rhapsody.png",
         }
     },
     {
@@ -21,7 +24,7 @@ const playlist = [
         album: {
             title: "Led Zeppelin IV",
             year: 1971,
-            coverUrl: "https://example.com/ledzeppelin.jpg",
+            coverUrl: "https://i1.sndcdn.com/artworks-000188953758-0d2twr-t1080x1080.jpg",
         }
     },
     {
@@ -32,7 +35,7 @@ const playlist = [
         album: {
             title: "Hotel California",
             year: 1976,
-            coverUrl: "https://example.com/eagles.jpg",
+            coverUrl: "https://pure-music.co.uk/wp-content/uploads/2019/04/Hotel-California-Album-Cover.png",
         }
     },
     {
@@ -43,7 +46,7 @@ const playlist = [
         album: {
             title: "Imagine",
             year: 1971,
-            coverUrl: "https://example.com/johnlennon.jpg",
+            coverUrl: "https://i1.sndcdn.com/artworks-000081989828-qzlmpu-t1080x1080.jpg",
         }
     },
     {
@@ -54,7 +57,7 @@ const playlist = [
         album: {
             title: "Nevermind",
             year: 1991,
-            coverUrl: "https://example.com/nirvana.jpg",
+            coverUrl: "https://upload.wikimedia.org/wikipedia/en/3/3c/Smells_Like_Teen_Spirit.jpg",
         }
     },
     {
@@ -65,46 +68,129 @@ const playlist = [
         album: {
             title: "Thriller",
             year: 1982,
-            coverUrl: "https://example.com/michaeljackson.jpg",
+            coverUrl: "https://www.wow-vinyl.com/media/pic/176-Acvr-700.jpg",
         }
     }
 ];
 //VARIABLAR för DOM-element
+const songListContainer = document.querySelector("#song-list-container");
 const songTitleElement = document.getElementById("song-title");
 const songArtistElement = document.getElementById("song-artist");
 const coverImageElement = document.getElementById("cover-img");
-// const playButton = document.getElementById("prev-btn");
-// const pauseButton = document.getElementById("play-pause-btn");
-// const stopButton = document.getElementById("stop-btn");
-//querySelector är mer modern och kan göra mer saker än getElementById då den kollar genom id, classer, taggar osv vilket inte getElementById kan
-const songListContainer = document.querySelector("#song-list-container");
-// LOGIC
-playlist.forEach((song) => {
-    const card = document.createElement("article");
-    card.classList.add("song-card");
-    const title = document.createElement("h3");
-    title.textContent = song.title;
-    const artist = document.createElement("span");
-    artist.textContent = song.artist;
-    card.append(title, artist);
-    if (songListContainer) {
+const prevBtn = document.getElementById("prev-btn");
+const playBtn = document.getElementById("play-btn");
+const nextBtn = document.getElementById("next-btn");
+// ===== State =====
+let currentIndex = -1; // ingen vald låt från start
+let status = "stopped";
+// ===== Render song list (createElement + textContent + classList + append) =====
+function renderSongList() {
+    if (!songListContainer)
+        return;
+    songListContainer.textContent = ""; // rensa container
+    playlist.forEach((song, index) => {
+        const card = document.createElement("article");
+        card.classList.add("song-card");
+        card.dataset.index = String(index);
+        const title = document.createElement("h3");
+        title.classList.add("song-card__title");
+        title.textContent = song.title;
+        const artist = document.createElement("span");
+        artist.classList.add("song-card__artist");
+        artist.textContent = song.artist;
+        card.append(title, artist);
+        // highlight om vald
+        if (index === currentIndex) {
+            card.classList.add("is-active");
+        }
+        // ===== Interaktion (addEventListener) =====
+        card.addEventListener("click", () => {
+            setCurrentSong(index);
+            setStatus("playing");
+        });
         songListContainer.append(card);
-    }
-});
-const currentSong = playlist[0];
-if (!currentSong) {
-    console.warn("No songs in playlist"); //La till detta för jag fick en röd varning annars av VSC om att currentSong kan vara undefined
+    });
 }
-else {
-    if (songTitleElement) {
-        songTitleElement.textContent = currentSong.title;
+const PLACEHOLDER_COVER = "https://via.placeholder.com/200x200.png?text=No+cover";
+// ===== Update player UI =====
+function setCurrentSong(index) {
+    const song = playlist[index];
+    if (!song)
+        return;
+    currentIndex = index;
+    if (songTitleElement)
+        songTitleElement.textContent = song.title;
+    if (songArtistElement)
+        songArtistElement.textContent = song.artist;
+    if (coverImageElement) {
+        coverImageElement.src = song.album.coverUrl ?? "PLACEHOLDER_COVER";
+        coverImageElement.alt = `${song.title} cover`;
     }
-    if (songArtistElement) {
-        songArtistElement.textContent = currentSong.artist;
-    }
-    if (coverImageElement && currentSong.album.coverUrl) {
-        coverImageElement.src = currentSong.album.coverUrl;
-    }
+    renderSongList(); // uppdatera active state
 }
+function setStatus(newStatus) {
+    status = newStatus;
+    if (!playBtn)
+        return;
+    // ändra knappens symbol beroende på status
+    if (status === "playing")
+        playBtn.textContent = "⏸";
+    if (status === "paused")
+        playBtn.textContent = "▶";
+    if (status === "stopped")
+        playBtn.textContent = "▶";
+}
+// Controls
+function nextSong() {
+    if (playlist.length === 0)
+        return;
+    const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % playlist.length;
+    setCurrentSong(nextIndex);
+    setStatus("playing");
+}
+function prevSong() {
+    if (playlist.length === 0)
+        return;
+    const prevIndex = currentIndex === -1
+        ? 0
+        : (currentIndex - 1 + playlist.length) % playlist.length;
+    setCurrentSong(prevIndex);
+    setStatus("playing");
+}
+function togglePlayPause() {
+    // om ingen låt är vald, börja med första
+    if (currentIndex === -1) {
+        setCurrentSong(0);
+        setStatus("playing");
+        return;
+    }
+    if (status === "playing")
+        setStatus("paused");
+    else
+        setStatus("playing");
+}
+// Koppla knappar
+prevBtn?.addEventListener("click", prevSong);
+nextBtn?.addEventListener("click", nextSong);
+playBtn?.addEventListener("click", togglePlayPause);
+// Init
+renderSongList();
+setStatus("stopped");
 export {};
+//querySelector är mer modern och kan göra mer saker än getElementById då den kollar genom id, classer, taggar osv vilket inte getElementById kan
+// KOD FRÅN IGÅR SOM JAG INTE BEHÖVER JUST NU
+// const currentSong = playlist[0];
+// if (!currentSong) {
+//   console.warn("No songs in playlist"); //La till detta för jag fick en röd varning annars av VSC om att currentSong kan vara undefined
+// } else {
+//   if (songTitleElement) {
+//     songTitleElement.textContent = currentSong.title;
+//   }
+//   if (songArtistElement) {
+//     songArtistElement.textContent = currentSong.artist;
+//   }
+//   if (coverImageElement && currentSong.album.coverUrl) {
+//     coverImageElement.src = currentSong.album.coverUrl;
+//   }
+// }
 //# sourceMappingURL=main.js.map
