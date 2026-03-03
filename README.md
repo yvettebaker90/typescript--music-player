@@ -23,7 +23,6 @@ This project is part of my journey learning modern frontend development.
 - **TypeScript**
 - **HTML5**
 - **CSS3**
-- No frameworks – vanilla & clean
 
 ---
 
