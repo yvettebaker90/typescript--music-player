@@ -7,7 +7,7 @@
 // Placeholder-bild som används när en låt saknar coverUrl
 // för att slippa "broken image" i UI
 // Fungerar ej i nuläget... 
-const PLACEHOLDER_COVER = "https://via.placeholder.com/200x200.png?text=No+cover";
+const PLACEHOLDER_COVER = "https://placehold.co/600x400/png";
 
 // INTERFACER / TYPER
 // Vi beskriver hur en låt ska se ut, så TypeScript kan hjälpa oss med rätt datatyper.
@@ -114,11 +114,6 @@ const nextBtn = document.querySelector("#next-btn") as HTMLButtonElement | null;
 let currentIndex = -1; // ingen vald låt från start
 let status: PlayerStatus = "stopped";
 
-
-
-
-//VISA ETT STÄLLE DÄR DU MANIPULERAR SIDAN
-
 // I funktionen renderSongList() skapar jag alla kort dynamiskt med
 // createElement och append istället för att använda innerHTML (en funktion jag inte riktigt förstå själv än).
 // Det gör att jag har bättre kontroll över elementen och hur de uppdateras.
@@ -218,7 +213,7 @@ function setCurrentSong(index: number) {
 
   // DOM-manipulation: uppdatera coverbild i footern/spelaren
   if (coverImageElement) {
-    coverImageElement.src = song.album.coverUrl ?? "";
+    coverImageElement.src = song.album.coverUrl ?? PLACEHOLDER_COVER;
     coverImageElement.alt = song.album.coverUrl ? `${song.title} cover` : "";
   }
 
